@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import ProductCard from '@/components/ui/ProductCard';
 import QuickView from '@/components/ui/QuickView';
+import LoginModal from '@/components/ui/LoginModal';
 
 const categories = ['All', 'T-Shirts', 'Bottoms', 'Hoodies', 'Accessories', 'Outerwear'];
 
@@ -13,6 +14,7 @@ export default function Shop() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [priceRange, setPriceRange] = useState(2000);
     const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     React.useEffect(() => {
         const fetchProducts = async () => {
@@ -37,8 +39,10 @@ export default function Shop() {
             <QuickView
                 isOpen={!!quickViewProduct}
                 onClose={() => setQuickViewProduct(null)}
+                onLoginRequired={() => setShowLoginModal(true)}
                 product={quickViewProduct}
             />
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
             <header className={styles.shopHeader}>
                 <h1 className={styles.title}>EXPLORE THE DROP</h1>
                 <p className={styles.count}>{filteredProducts.length} items found</p>

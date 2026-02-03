@@ -1,15 +1,49 @@
 import { NextResponse } from 'next/server';
+import { isValidEmail, sanitizeString } from '@/lib/security';
 
 export async function POST(request: Request) {
-    const data = await request.json();
+    try {
+        const data = await request.json();
 
-    // Simulated verification logic
-    console.log('Verifying student:', data);
+        // Validate inputs
+        if (!data.email || !isValidEmail(data.email)) {
+            return NextResponse.json(
+                { success: false, error: 'Invalid email address' },
+                { status: 400 }
+            );
+        }
 
-    // In a real app, we would process the document here
-    return NextResponse.json({
-        success: true,
-        message: 'Student status verified!',
-        promoCode: 'STUDENT20'
-    });
+        if (!data.studentId || typeof data.studentId !== 'string') {
+            return NextResponse.json(
+                { success: false, error: 'Student ID required' },
+                { status: 400 }
+            );
+        }
+
+        // Sanitize inputs
+        const sanitizedEmail = sanitizeString(data.email, 254);
+        const sanitizedStudentId = sanitizeString(data.studentId, 50);
+        const sanitizedName = data.name ? sanitizeString(data.name, 100) : undefined;
+
+        // Simulated verification logic
+        // In production, never log sensitive user data
+        // console.log('Verifying student');
+
+        // In a real app, we would:
+        // 1. Verify the student ID against a database
+        // 2. Check if document is valid
+        // 3. Create a verified user session
+
+        return NextResponse.json({
+            success: true,
+            message: 'Student status verified!',
+            promoCode: 'STUDENT20'
+        });
+    } catch (error) {
+        console.error('Verify API error:', error);
+        return NextResponse.json(
+            { success: false, error: 'Verification failed' },
+            { status: 500 }
+        );
+    }
 }

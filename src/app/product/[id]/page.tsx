@@ -5,6 +5,8 @@ import styles from './page.module.css';
 import Button from '@/components/ui/Button';
 import ProductCard from '@/components/ui/ProductCard';
 import { useCart } from '@/lib/CartContext';
+import { useAuth } from '@/lib/AuthContext';
+import LoginModal from '@/components/ui/LoginModal';
 
 const mockProduct: any = {};
 const relatedProducts: any[] = [];
@@ -16,12 +18,14 @@ export default function ProductDetail() {
     const id = params.id as string;
 
     const { addToCart } = useCart();
+    const { isAuthenticated } = useAuth();
     const [product, setProduct] = useState<any>(null);
     const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState('M');
     const [addedToCart, setAddedToCart] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -48,6 +52,12 @@ export default function ProductDetail() {
     }, [id]);
 
     const handleAddToCart = () => {
+        // Check if user is logged in
+        if (!isAuthenticated) {
+            setShowLoginModal(true);
+            return;
+        }
+
         if (!selectedSize) {
             alert('Please select a size');
             return;
@@ -160,6 +170,9 @@ export default function ProductDetail() {
                     </div>
                 </section>
             )}
+
+            {/* Login Modal */}
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
         </div>
     );
 }

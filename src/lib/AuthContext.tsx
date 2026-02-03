@@ -46,7 +46,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [user, isInitialized]);
 
     const login = async (email: string, password: string): Promise<boolean> => {
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return false;
+        }
+
         // Mock authentication - in production, this would call an API
+        // with proper password hashing and JWT tokens
         if (email && password.length >= 6) {
             const name = email.split('@')[0];
             setUser({ name, email });

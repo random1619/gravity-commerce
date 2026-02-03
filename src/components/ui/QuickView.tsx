@@ -5,10 +5,12 @@ import styles from './QuickView.module.css';
 import Modal from './Modal';
 import Button from './Button';
 import { useCart } from '@/lib/CartContext';
+import { useAuth } from '@/lib/AuthContext';
 
 interface QuickViewProps {
     isOpen: boolean;
     onClose: () => void;
+    onLoginRequired?: () => void;
     product: {
         name: string;
         price: number;
@@ -20,14 +22,26 @@ interface QuickViewProps {
     } | null;
 }
 
-const QuickView: React.FC<QuickViewProps> = ({ isOpen, onClose, product }) => {
+const QuickView: React.FC<QuickViewProps> = ({ isOpen, onClose, onLoginRequired, product }) => {
     const { addToCart } = useCart();
+    const { isAuthenticated } = useAuth();
     const [selectedSize, setSelectedSize] = useState<string>('');
     const [showSuccess, setShowSuccess] = useState(false);
 
     if (!product) return null;
 
     const handleAddToCart = () => {
+        // Check if user is logged in
+        if (!isAuthenticated) {
+            onClose();
+            if (onLoginRequired) {
+                onLoginRequired();
+            } else {
+                alert('Please login to add items to your bag');
+            }
+            return;
+        }
+
         if (!selectedSize) {
             alert('Please select a size');
             return;
