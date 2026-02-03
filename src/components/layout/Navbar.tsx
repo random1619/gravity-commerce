@@ -18,6 +18,7 @@ const Navbar = () => {
     const [trends, setTrends] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -42,6 +43,11 @@ const Navbar = () => {
         const handleClickOutside = (event: MouseEvent) => {
             if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
                 setShowSuggestions(false);
+            }
+            // Close user dropdown when clicking outside
+            const userMenu = document.querySelector(`.${styles.userMenu}`);
+            if (userMenu && !userMenu.contains(event.target as Node)) {
+                setShowUserDropdown(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -111,9 +117,42 @@ const Navbar = () => {
 
                     {isAuthenticated ? (
                         <div className={styles.userMenu}>
-                            <button className={styles.userBtn} onClick={logout}>
-                                👤 {user?.name}
+                            <button
+                                className={styles.userBtn}
+                                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                            >
+                                <span className={styles.avatar}>👤</span>
+                                <span>Hi, {user?.name}</span>
+                                <span className={styles.dropdownArrow}>▼</span>
                             </button>
+                            {showUserDropdown && (
+                                <div className={styles.userDropdown}>
+                                    <div className={styles.dropdownHeader}>
+                                        <div className={styles.dropdownAvatar}>👤</div>
+                                        <div>
+                                            <p className={styles.dropdownName}>{user?.name}</p>
+                                            <p className={styles.dropdownEmail}>{user?.email}</p>
+                                        </div>
+                                    </div>
+                                    <div className={styles.dropdownDivider}></div>
+                                    <Link href="/orders" className={styles.dropdownItem} onClick={() => setShowUserDropdown(false)}>
+                                        📦 My Orders
+                                    </Link>
+                                    <Link href="/wishlist" className={styles.dropdownItem} onClick={() => setShowUserDropdown(false)}>
+                                        ❤️ Wishlist
+                                    </Link>
+                                    <Link href="/settings" className={styles.dropdownItem} onClick={() => setShowUserDropdown(false)}>
+                                        ⚙️ Settings
+                                    </Link>
+                                    <div className={styles.dropdownDivider}></div>
+                                    <button
+                                        className={styles.logoutBtn}
+                                        onClick={() => { logout(); setShowUserDropdown(false); }}
+                                    >
+                                        🚪 Logout
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <Button variant="primary" size="sm" onClick={() => setShowLoginModal(true)}>

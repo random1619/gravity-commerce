@@ -1,4 +1,5 @@
 .button {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -9,11 +10,36 @@
     white-space: nowrap;
     gap: var(--spacing-sm);
     font-family: inherit;
+    overflow: hidden;
 }
 
 .button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: rippleEffect 0.6s ease-out;
+}
+
+@keyframes rippleEffect {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(20);
+        opacity: 0;
+    }
 }
 
 /* Variants */

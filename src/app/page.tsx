@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
-import Hero from '@/components/layout/Hero';
+import HeroSlider from '@/components/ui/HeroSlider';
 import ProductCard from '@/components/ui/ProductCard';
+import ProductSkeleton from '@/components/ui/ProductSkeleton';
 import Button from '@/components/ui/Button';
 
 
@@ -39,7 +40,7 @@ export default function Home() {
 
   return (
     <div className={styles.home}>
-      <Hero />
+      <HeroSlider />
 
       <section className={styles.section}>
         <div className="container">
@@ -51,7 +52,16 @@ export default function Home() {
             <Link href="/shop" className={styles.viewAll}>View All →</Link>
           </div>
           <div className={styles.productGrid}>
-            {featuredProducts.map(p => <ProductCard key={p.id} {...p} />)}
+            {loading ? (
+              <>
+                <ProductSkeleton />
+                <ProductSkeleton />
+                <ProductSkeleton />
+                <ProductSkeleton />
+              </>
+            ) : (
+              featuredProducts.map(p => <ProductCard key={p.id} {...p} />)
+            )}
           </div>
         </div>
       </section>
@@ -76,7 +86,16 @@ export default function Home() {
             <Button variant="outline" size="sm">Explore Deals</Button>
           </div>
           <div className={styles.productGrid}>
-            {budgetDrops.map(p => <ProductCard key={p.id} {...p} />)}
+            {loading ? (
+              <>
+                <ProductSkeleton />
+                <ProductSkeleton />
+                <ProductSkeleton />
+                <ProductSkeleton />
+              </>
+            ) : (
+              budgetDrops.map(p => <ProductCard key={p.id} {...p} />)
+            )}
           </div>
         </div>
       </section>
