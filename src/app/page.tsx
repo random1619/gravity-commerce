@@ -1,66 +1,100 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import styles from './page.module.css';
+import Hero from '@/components/layout/Hero';
+import ProductCard from '@/components/ui/ProductCard';
+import Button from '@/components/ui/Button';
+
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [budgetDrops, setBudgetDrops] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      setLoading(true);
+      try {
+        // Fetch specific segments for homepage
+        const [res1, res2] = await Promise.all([
+          fetch('/api/products?maxPrice=2000'), // Featured
+          fetch('/api/products?maxPrice=999'), // Budget
+        ]);
+
+        const data1 = await res1.json();
+        const data2 = await res2.json();
+
+        setFeaturedProducts(data1.slice(0, 4));
+        setBudgetDrops(data2.slice(0, 4));
+      } catch (error) {
+        console.error('Home data fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHomeData();
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.home}>
+      <Hero />
+
+      <section className={styles.section}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <div>
+              <h2 className={styles.sectionTitle}>NEWEST DROPS</h2>
+              <p className={styles.sectionSubtitle}>The freshest styles for the semester.</p>
+            </div>
+            <Link href="/shop" className={styles.viewAll}>View All →</Link>
+          </div>
+          <div className={styles.productGrid}>
+            {featuredProducts.map(p => <ProductCard key={p.id} {...p} />)}
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className={styles.discountBanner}>
+        <div className="container">
+          <div className={styles.bannerContent}>
+            <h2>VERIFIED STUDENT?</h2>
+            <p>Get an extra 20% OFF on all orders. Link your ID in 30 seconds.</p>
+            <Button variant="secondary" size="lg">Verify Now</Button>
+          </div>
         </div>
-      </main>
+      </section>
+
+      <section className={`${styles.section} ${styles.budgetBg}`}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <div>
+              <h2 className={styles.sectionTitle}>UNDER ₹999</h2>
+              <p className={styles.sectionSubtitle}>Drip on a budget. No compromises.</p>
+            </div>
+            <Button variant="outline" size="sm">Explore Deals</Button>
+          </div>
+          <div className={styles.productGrid}>
+            {budgetDrops.map(p => <ProductCard key={p.id} {...p} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Mini Reels Section Preview */}
+      <section className={styles.section}>
+        <div className="container">
+          <h2 className={styles.sectionTitle}>WATCH THE VIBE</h2>
+          <div className={styles.reelsGrid}>
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className={styles.reelPlaceholder}>
+                <img src={`/reel-${i}.png`} alt={`Gravity Reel ${i}`} className={styles.reelImage} />
+                <div className={styles.reelOverlay}>▶ Play</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

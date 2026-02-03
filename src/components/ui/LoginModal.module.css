@@ -1,0 +1,116 @@
+.loginModal {
+    padding: var(--spacing-2xl);
+    max-width: 450px;
+    width: 100%;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: var(--spacing-xs);
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-2xl);
+    font-size: 14px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.inputGroup label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.inputGroup input {
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: var(--transition-fast);
+}
+
+.inputGroup input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+}
+
+.error {
+    color: #ef4444;
+    font-size: 14px;
+    text-align: center;
+    padding: var(--spacing-sm);
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-sm);
+    margin: 0;
+}
+
+.toggle {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.toggle p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.toggleBtn {
+    background: none;
+    border: none;
+    color: var(--accent-primary);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.toggleBtn:hover {
+    color: var(--accent-secondary);
+}
+
+.demo {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--border-color);
+}
+
+.demoText {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0;
+}
+
+.demoText strong {
+    color: var(--accent-primary);
+}
+
+@media (max-width: 768px) {
+    .loginModal {
+        padding: var(--spacing-xl);
+    }
+
+    .title {
+        font-size: 24px;
+    }
+}
